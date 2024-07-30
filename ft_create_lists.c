@@ -51,8 +51,13 @@ t_redir	*ft_new_redir(void)
 	type = global.cur_token->type;
 	redir->type = type;
 	global.cur_token = global.cur_token->next;
-	redir->file = ft_strdup(global.cur_token->data);
-	global.cur_token = global.cur_token->next;
+	if (global.cur_token && global.cur_token->type == T_WORD)
+	{
+		redir->file = ft_strdup(global.cur_token->data);
+		global.cur_token = global.cur_token->next;
+	}
+	else
+		global.error_type = E_SYNTAX;
 	return (redir);
 }
 

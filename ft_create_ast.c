@@ -49,10 +49,22 @@ t_node	*ft_primary(void)
 		global.error_type = E_SYNTAX;
 		return (NULL);
 	}
-	if (global.cur_token && (global.cur_token->type == T_WORD || ft_is_redir(global.cur_token->type)))
+	if (global.cur_token && global.cur_token->type == T_O_PARENTHESIS)
 	{
-		return (ft_get_cmd_node());
+		global.cur_token = global.cur_token->next;
+		if (!global.cur_token)
+		{
+			global.error_type = E_SYNTAX;
+			return (node);
+		}
+		node = ft_expression(0);
+		if (!global.cur_token || global.cur_token->type != T_C_PARENTHESIS)
+			global.error_type = E_SYNTAX;
+		global.cur_token = global.cur_token->next;
+		return (node);
 	}
+	if (global.cur_token && (global.cur_token->type == T_WORD || ft_is_redir(global.cur_token->type)))
+		return (ft_get_cmd_node());
 	return (node);
 }
 
